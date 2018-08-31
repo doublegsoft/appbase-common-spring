@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context.xsd 
+                        http://www.springframework.org/schema/tx 
+                        http://www.springframework.org/schema/tx/spring-tx.xsd
+                        http://www.springframework.org/schema/aop 
+                        http://www.springframework.org/schema/aop/spring-aop.xsd
+                        http://www.springframework.org/schema/mvc 
+                        http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+	<!-- 数据源 -->
+	<bean id="dataSource" class="com.jolbox.bonecp.BoneCPDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="org.hsqldb.jdbc.JDBCDriver" />
+		<property name="jdbcUrl" value="jdbc:hsqldb:hsql://localhost:28888/test" />
+		<property name="idleConnectionTestPeriodInMinutes" value="1" />
+		<property name="idleMaxAgeInMinutes" value="1" />
+		<property name="maxConnectionsPerPartition" value="1" />
+		<property name="minConnectionsPerPartition" value="1" />
+		<property name="partitionCount" value="1" />
+		<property name="acquireIncrement" value="5" />
+		<property name="statementsCacheSize" value="100" />
+	</bean>
+
+	<!-- 基础数据访问组件 -->
+	<bean id="commonService" class="net.doublegsoft.appbase.service.CommonService">
+		<property name="sqlManager" ref="sqlManager" />
+		<property name="commonDataAccess" ref="commonDataAccess" />
+		<property name="debug" value="true"></property>
+	</bean>
+
+	<bean id="commonDataAccess" class="net.doublegsoft.appbase.dao.JdbcCommonDataAccess"
+		destroy-method="close">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<bean id="sqlManager" class="net.doublegsoft.appbase.sql.SqlManager">
+		<property name="resources">
+			<list>
+				<value>/sql/test.xml</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<tx:annotation-driven transaction-manager="transactionManager" />
+
+	<!-- Spring MVC 架构配置 -->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<property name="maxUploadSize" value="1073741824" />
+	</bean>
+
+	<bean id="controllerInterceptor" class="net.doublegsoft.appbase.webmvc.ControllerInterceptor" />
+
+	<!-- adds the custom request object and the custom response object -->
+	<!-- org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter -->
+	<bean class="net.doublegsoft.appbase.webmvc.AppbaseRequestMappingHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<bean class="org.springframework.http.converter.StringHttpMessageConverter">
+					<property name="supportedMediaTypes" value="text/plain;charset=UTF-8" />
+				</bean>
+				<bean class="net.doublegsoft.appbase.webmvc.JsonDataHttpMessageConverter" />
+			</list>
+		</property>
+		<!--
+		<property name="customArgumentResolvers">
+		  <list>
+		    <bean class="net.doublegsoft.appbase.webmvc.ObjectMapArgumentResolver"/>
+		  </list>
+		</property>
+		-->
+	</bean>
+
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix">
+			<value>/</value>
+		</property>
+		<property name="suffix">
+			<value>.jsp</value>
+		</property>
+	</bean>
+
+</beans>

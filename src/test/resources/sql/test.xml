@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sqls>
+    <sql id="create">
+    <![CDATA[
+		create table info (
+            id bigint primary key,
+            name varchar(100),
+            lmt datetime, 
+            isnull varchar(10)
+        );
+    ]]>
+    </sql>
+    <sql id="count">
+    <![CDATA[
+        select count(*) from info;
+    ]]>
+    </sql>
+    <sql id="page">
+    <![CDATA[
+        select * from info;
+    ]]>
+    </sql>
+    <sql id="id">
+    <![CDATA[
+        select * from info where id = ${id};
+    ]]>
+    </sql>
+    <sql id="insert">
+    <![CDATA[
+        insert into info (id, name, lmt, isnull) values (${id}, ${name}, ${lmt}, ${isnull});
+    ]]>
+    </sql>
+    <sql id="update">
+    <![CDATA[
+        
+    ]]>    
+    </sql>
+    <sql id="delete">
+    <![CDATA[
+        delete from info;
+    ]]>    
+    </sql>
+    <sql id="drop">
+    <![CDATA[
+        drop table info;
+    ]]>    
+    </sql>
+</sqls>
