@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
-    xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
-    xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p"
-    xsi:schemaLocation="http://www.springframework.org/schema/beans
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
   http://www.springframework.org/schema/beans/spring-beans.xsd
   http://www.springframework.org/schema/context
   http://www.springframework.org/schema/context/spring-context.xsd 
@@ -14,84 +14,72 @@
   http://www.springframework.org/schema/mvc 
   http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
-    <!--tx:annotation-driven / -->
+	<!--tx:annotation-driven / -->
 
-    <tx:annotation-driven transaction-manager="transactionManager" />
+	<tx:annotation-driven transaction-manager="transactionManager" />
 
-    <aop:aspectj-autoproxy />
+	<aop:aspectj-autoproxy />
 
-    <context:component-scan base-package="net.doublegsoft.appbase.*" />
-    
-    <!--
-    <bean id="objectMapResolver" class="net.doublegsoft.appbase.webmvc.ObjectMapArgumentResolver" lazy-init="false"/>
-    <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter"
-          p:customArgumentResolver-ref="objectMapResolver">
-    </bean>
-    -->
-    
-    <!--mvc:annotation-driven>
-        <mvc:argument-resolvers>
-            <bean class="net.doublegsoft.appbase.webmvc.ObjectMapArgumentResolver" lazy-init="false"/>
-        </mvc:argument-resolvers>
-    </mvc:annotation-driven-->
+	<context:component-scan base-package="net.doublegsoft.appbase.*" />
 
-    <!--bean id="dataSource" class="org.hsqldb.jdbc.JDBCDataSource">
-        <property name="url" value="jdbc:hsqldb:mem:test" />
-    </bean-->
+	<!-- <bean id="objectMapResolver" class="net.doublegsoft.appbase.webmvc.ObjectMapArgumentResolver" 
+		lazy-init="false"/> <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" 
+		p:customArgumentResolver-ref="objectMapResolver"> </bean> -->
 
-    <bean id="dataSource" class="com.jolbox.bonecp.BoneCPDataSource"
-        destroy-method="close">
-        <property name="driverClass" value="org.hsqldb.jdbc.JDBCDriver" />
-        <property name="jdbcUrl" value="jdbc:hsqldb:mem:test" />
-        <property name="idleConnectionTestPeriodInMinutes" value="1" />
-        <property name="idleMaxAgeInMinutes" value="1" />
-        <property name="maxConnectionsPerPartition" value="1" />
-        <property name="minConnectionsPerPartition" value="1" />
-        <property name="partitionCount" value="1" />
-        <property name="acquireIncrement" value="1" />
-        <property name="statementsCacheSize" value="100" />
-    </bean>
+	<!--mvc:annotation-driven> <mvc:argument-resolvers> <bean class="net.doublegsoft.appbase.webmvc.ObjectMapArgumentResolver" 
+		lazy-init="false"/> </mvc:argument-resolvers> </mvc:annotation-driven -->
 
-    <bean id="transactionManager"
-        class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="dataSource" />
-    </bean>
+	<!--bean id="dataSource" class="org.hsqldb.jdbc.JDBCDataSource"> <property 
+		name="url" value="jdbc:hsqldb:mem:test" /> </bean -->
 
-    <!--tx:advice id="txAdvice" transaction-manager="transactionManager">
-        <tx:attributes>
-            <tx:method name="*" />
-        </tx:attributes>
-    </tx:advice>
-    <aop:config>
-        <aop:pointcut id="txPointcut" expression="execution(* *Service.*(..))" />
-        <aop:advisor advice-ref="txAdvice" pointcut-ref="txPointcut" />
-    </aop:config-->
+	<bean id="dataSource" class="com.jolbox.bonecp.BoneCPDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="org.hsqldb.jdbc.JDBCDriver" />
+		<property name="jdbcUrl" value="jdbc:hsqldb:mem:test" />
+		<property name="idleConnectionTestPeriodInMinutes" value="1" />
+		<property name="idleMaxAgeInMinutes" value="1" />
+		<property name="maxConnectionsPerPartition" value="1" />
+		<property name="minConnectionsPerPartition" value="1" />
+		<property name="partitionCount" value="1" />
+		<property name="acquireIncrement" value="1" />
+		<property name="statementsCacheSize" value="100" />
+	</bean>
 
-    <bean id="commonService" class="net.doublegsoft.appbase.service.CommonService">
-        <property name="sqlManager" ref="sqlManager" />
-        <property name="commonDataAccess" ref="commonDataAccess" />
-    </bean>
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
 
-    <bean id="declarativeTransactionTestService"
-        class="net.doublegsoft.appbase.service.DeclarativeTransactionTestService" />
+	<!--tx:advice id="txAdvice" transaction-manager="transactionManager"> <tx:attributes> 
+		<tx:method name="*" /> </tx:attributes> </tx:advice> <aop:config> <aop:pointcut 
+		id="txPointcut" expression="execution(* *Service.*(..))" /> <aop:advisor 
+		advice-ref="txAdvice" pointcut-ref="txPointcut" /> </aop:config -->
 
-    <bean id="programmaticTransactionTestService"
-        class="net.doublegsoft.appbase.service.ProgrammaticTransactionTestService" />
+	<bean id="commonService" class="net.doublegsoft.appbase.service.CommonService">
+		<property name="sqlManager" ref="sqlManager" />
+		<property name="commonDataAccess" ref="commonDataAccess" />
+	</bean>
 
-    <bean id="commonDataAccess" class="net.doublegsoft.appbase.dao.JdbcCommonDataAccess"
-        destroy-method="close">
-        <property name="dataSource" ref="dataSource" />
-    </bean>
+	<bean id="declarativeTransactionTestService"
+		class="net.doublegsoft.appbase.service.DeclarativeTransactionTestService" />
 
-    <bean id="sqlManager" class="net.doublegsoft.appbase.sql.SqlManager">
-        <property name="resources">
-            <list>
-                <value>/sql/test.xml</value>
-            </list>
-        </property>
-    </bean>
+	<bean id="programmaticTransactionTestService"
+		class="net.doublegsoft.appbase.service.ProgrammaticTransactionTestService" />
 
-    <bean id="txAspect"
-        class="net.doublegsoft.appbase.service.TransactionManagementAspect" />
+	<bean id="commonDataAccess" class="net.doublegsoft.appbase.dao.JdbcCommonDataAccess"
+		destroy-method="close">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<bean id="sqlManager" class="net.doublegsoft.appbase.sql.SqlManager">
+		<property name="resources">
+			<list>
+				<value>/sql/test.xml</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="txAspect"
+		class="net.doublegsoft.appbase.service.TransactionManagementAspect" />
 
 </beans>

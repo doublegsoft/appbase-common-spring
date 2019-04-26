@@ -4,12 +4,12 @@
 
 	<groupId>net.doublegsoft.appbase</groupId>
 	<artifactId>appbase-common-spring</artifactId>
-	<version>3.0</version>
+	<version>3.1</version>
 	<packaging>jar</packaging>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<appbase-parent.version>3.0</appbase-parent.version>
+		<appbase-parent.version>3.1</appbase-parent.version>
 	</properties>
 
 	<build>
@@ -140,10 +140,6 @@
 			<artifactId>slf4j-simple</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>log4j-over-slf4j</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjweaver</artifactId>
 		</dependency>
@@ -194,6 +190,13 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+  
+  <distributionManagement>
+    <repository>
+      <id>cqwinning-repository</id>
+      <url>http://120.79.137.143:8081/repository/maven-releases/</url>
+    </repository>
+  </distributionManagement>
   
   <!--
 	<distributionManagement>

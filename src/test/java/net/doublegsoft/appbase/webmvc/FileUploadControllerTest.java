@@ -24,7 +24,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.HttpClients;
-import org.junit.Test;
+import org.junit.Ignore;
 
 /**
  * @author gg
@@ -32,25 +32,25 @@ import org.junit.Test;
  */
 public class FileUploadControllerTest extends ControllerTestBase {
 
-    @Test
-    public void test_upload() throws Exception {
-        File file = new File("src/test/resources/file/upload.mp4");
+  @Ignore
+  public void test_upload() throws Exception {
+    File file = new File("src/test/resources/file/upload.mp4");
 
-        HttpClient hc = HttpClients.createDefault();
-        HttpPost post = new HttpPost(ROOT_URL + "/api/file/upload.do");
+    HttpClient hc = HttpClients.createDefault();
+    HttpPost post = new HttpPost(ROOT_URL + "/api/file/upload.do");
 
-        MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-        builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-        builder.addTextBody("addvcd", "500102");
-        builder.addTextBody("directoryKey", "demo");
-        builder.addBinaryBody("file", file);
+    MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+    builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+    builder.addTextBody("addvcd", "500102");
+    builder.addTextBody("directoryKey", "demo");
+    builder.addBinaryBody("file", file);
 
-        HttpEntity entity = builder.build();
-        post.setEntity(entity);
+    HttpEntity entity = builder.build();
+    post.setEntity(entity);
 
-        HttpResponse resp = hc.execute(post);
-        String status = processResponse(resp);
-        // Assert.assertEquals("200", status);
-    }
+    HttpResponse resp = hc.execute(post);
+    String status = processResponse(resp);
+    // Assert.assertEquals("200", status);
+  }
 
 }

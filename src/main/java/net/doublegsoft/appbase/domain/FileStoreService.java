@@ -26,12 +26,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
-import net.doublegsoft.appbase.ObjectMap;
-
 import freemarker.cache.StringTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import net.doublegsoft.appbase.ObjectMap;
 
 /**
  * It handles an input stream and store in specific directory.
@@ -42,112 +41,113 @@ import freemarker.template.TemplateException;
  */
 public class FileStoreService {
 
-    private final static Configuration FREEMARKER = new Configuration(Configuration.getVersion());
+  private final static Configuration FREEMARKER = new Configuration(Configuration.getVersion());
 
-    private static Map<String, String> templates = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+  private static Map<String, String> templates = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
-    private static Map<String, Template> cache = new HashMap<>();
+  private static Map<String, Template> cache = new HashMap<>();
 
-    private static final StringTemplateLoader TEMPLATE_LOADER = new StringTemplateLoader();
+  private static final StringTemplateLoader TEMPLATE_LOADER = new StringTemplateLoader();
 
-    static {
-        FREEMARKER.setTemplateLoader(TEMPLATE_LOADER);
+  static {
+    FREEMARKER.setTemplateLoader(TEMPLATE_LOADER);
+  }
+
+  public void setResources(Map<String, String> resources) {
+    templates.putAll(resources);
+  }
+
+  /**
+   * Stores the http file input stream in a file.
+   * 
+   * @param realPath
+   *          the real path in the server
+   * 
+   * @param directoryKey
+   *          the directory key related with a specific directory to store, defined in spring
+   * 
+   * @param paths
+   *          the path variables applying to template rendering
+   * 
+   * @param ext
+   *          the file extension name
+   * 
+   * @param inputStream
+   *          the input stream
+   * 
+   * @return the generated relative file path
+   * 
+   * @throws IOException
+   *           in case of any errors
+   */
+  public String store(String realPath, String directoryKey, ObjectMap paths, String ext, InputStream inputStream)
+      throws IOException {
+    String fp = filepath(realPath, directoryKey, paths, ext);
+    synchronized (FileStoreService.class) {
+      FileOutputStream fileOutput = new FileOutputStream(new File(realPath, fp));
+      if (inputStream == null) {
+        return null;
+      }
+      byte[] buff = new byte[4096];
+      int len;
+      while ((len = inputStream.read(buff)) != -1) {
+        fileOutput.write(buff, 0, len);
+      }
+      fileOutput.flush();
+      fileOutput.close();
+      inputStream.close();
     }
+    return fp;
+  }
 
-    public void setResources(Map<String, String> resources) {
-        templates.putAll(resources);
+  private String filepath(String realPath, String directoryKey, ObjectMap paths, String ext) throws IOException {
+    Template tpl = cache.get(directoryKey);
+    preset(paths);
+    StringWriter writer = new StringWriter();
+    if (tpl == null) {
+      TEMPLATE_LOADER.putTemplate(directoryKey, templates.get(directoryKey));
+      tpl = FREEMARKER.getTemplate(directoryKey, "UTF-8");
+      cache.put(directoryKey, tpl);
     }
-
-    /**
-     * Stores the http file input stream in a file.
-     * 
-     * @param realPath
-     *            the real path in the server
-     * 
-     * @param directoryKey
-     *            the directory key related with a specific directory to store, defined in spring
-     * 
-     * @param paths
-     *            the path variables applying to template rendering
-     * 
-     * @param inputStream
-     *            the input stream
-     * 
-     * @return the generated relative file path
-     * 
-     * @throws IOException
-     *             in case of any errors
-     */
-    public String store(String realPath, String directoryKey, ObjectMap paths, String ext,
-            InputStream inputStream)
-            throws IOException {
-        String fp = filepath(realPath, directoryKey, paths, ext);
-        synchronized (FileStoreService.class) {
-            FileOutputStream fileOutput = new FileOutputStream(new File(realPath, fp));
-            if (inputStream == null) {
-                return null;
-            }
-            byte[] buff = new byte[4096];
-            int len;
-            while ((len = inputStream.read(buff)) != -1) {
-                fileOutput.write(buff, 0, len);
-            }
-            fileOutput.flush();
-            fileOutput.close();
-            inputStream.close();
-        }
-        return fp;
+    try {
+      tpl.process(paths, writer);
+    } catch (TemplateException ex) {
+      throw new IOException(ex);
     }
+    writer.flush();
+    writer.close();
 
-    private String filepath(String realPath, String directoryKey, ObjectMap paths, String ext)
-            throws IOException {
-        Template tpl = cache.get(directoryKey);
-        preset(paths);
-        StringWriter writer = new StringWriter();
-        if (tpl == null) {
-            TEMPLATE_LOADER.putTemplate(directoryKey, templates.get(directoryKey));
-            tpl = FREEMARKER.getTemplate(directoryKey, "UTF-8");
-            cache.put(directoryKey, tpl);
-        }
-        try {
-            tpl.process(paths, writer);
-        } catch (TemplateException ex) {
-            throw new IOException(ex);
-        }
-        writer.flush();
-        writer.close();
-
-        StringBuilder retVal = new StringBuilder();
-        String dir = writer.toString();
-        if (dir.indexOf("/") != 0) {
-            dir = "/" + dir;
-        }
-        if (dir.lastIndexOf("/") != dir.length() - 1) {
-            dir += "/";
-        }
-        retVal.append(dir);
-        File d = new File(realPath, dir);
-        if (!d.exists()) {
-            d.mkdirs();
-        }
-        synchronized (FileStoreService.class) {
-            String fn = System.currentTimeMillis() + "." + ext;
-            retVal.append(fn);
-        }
-        return retVal.toString();
+    StringBuilder retVal = new StringBuilder();
+    String dir = writer.toString();
+    if (dir.indexOf("/") != 0) {
+      dir = "/" + dir;
     }
-
-    private void preset(ObjectMap paths) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(new Date());
-        int year = cal.get(Calendar.YEAR);
-        int month = cal.get(Calendar.MONTH) + 1;
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-        paths.put("yearMonth", String.format("%04d%02d", year, month));
-        paths.put("yearMonthDay", String.format("%04d%02d%02d", year, month, day));
+    if (dir.lastIndexOf("/") != dir.length() - 1) {
+      dir += "/";
     }
-
-    public FileStoreService() {
-
+    retVal.append(dir);
+    File d = new File(realPath, dir);
+    if (!d.exists()) {
+      d.mkdirs();
     }
+    synchronized (FileStoreService.class) {
+      String fn = System.currentTimeMillis() + "." + ext;
+      retVal.append(fn);
+    }
+    return retVal.toString();
+  }
+
+  private void preset(ObjectMap paths) {
+    Calendar cal = Calendar.getInstance();
+    cal.setTime(new Date());
+    int year = cal.get(Calendar.YEAR);
+    int month = cal.get(Calendar.MONTH) + 1;
+    int day = cal.get(Calendar.DAY_OF_MONTH);
+    paths.put("yearMonth", String.format("%04d%02d", year, month));
+    paths.put("yearMonthDay", String.format("%04d%02d%02d", year, month, day));
+  }
+
+  public FileStoreService() {
+
+  }
 }

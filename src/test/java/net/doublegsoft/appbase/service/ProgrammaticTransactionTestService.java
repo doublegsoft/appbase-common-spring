@@ -35,47 +35,47 @@ import net.doublegsoft.appbase.sql.SqlManager;
  */
 public class ProgrammaticTransactionTestService extends AbstractService {
 
-    private SqlManager sqlManager;
+  private SqlManager sqlManager;
 
-    public void failed() throws Exception {
-        for (int i = 0; i < 100; i++) {
-            SqlParams params = new SqlParams();
-            params.set("id", i);
-            params.set("name", "这是名字" + i);
-            params.set("lmt", new Timestamp(System.currentTimeMillis()).toString());
-            try {
-                commonDataAccess.execute(sqlManager.getSql("insert", params));
-                if (i == 30) {
-                    throw new Exception();
-                }
-            } catch (DataAccessException ex) {
-                throw new Exception("rollback");
-            }
+  public void failed() throws Exception {
+    for (int i = 0; i < 100; i++) {
+      SqlParams params = new SqlParams();
+      params.set("id", i);
+      params.set("name", "这是名字" + i);
+      params.set("lmt", new Timestamp(System.currentTimeMillis()).toString());
+      try {
+        commonDataAccess.execute(sqlManager.getSql("insert", params));
+        if (i == 30) {
+          throw new Exception();
         }
+      } catch (DataAccessException ex) {
+        throw new Exception("rollback");
+      }
     }
+  }
 
-    public void success() throws Exception {
-        for (int i = 0; i < 100; i++) {
-            SqlParams params = new SqlParams();
-            params.set("id", i);
-            params.set("name", "这是名字" + i);
-            params.set("lmt", new Timestamp(System.currentTimeMillis()).toString());
-            try {
-                commonDataAccess.execute(sqlManager.getSql("insert", params));
-            } catch (DataAccessException ex) {
-                throw new Exception("rollback");
-            }
-        }
+  public void success() throws Exception {
+    for (int i = 0; i < 100; i++) {
+      SqlParams params = new SqlParams();
+      params.set("id", i);
+      params.set("name", "这是名字" + i);
+      params.set("lmt", new Timestamp(System.currentTimeMillis()).toString());
+      try {
+        commonDataAccess.execute(sqlManager.getSql("insert", params));
+      } catch (DataAccessException ex) {
+        throw new Exception("rollback");
+      }
     }
+  }
 
-    @Override
-    @Autowired
-    public void setCommonDataAccess(CommonDataAccess commonDataAccess) {
-        this.commonDataAccess = commonDataAccess;
-    }
+  @Override
+  @Autowired
+  public void setCommonDataAccess(CommonDataAccess commonDataAccess) {
+    this.commonDataAccess = commonDataAccess;
+  }
 
-    @Autowired
-    public void setSqlManager(SqlManager sqlManager) {
-        this.sqlManager = sqlManager;
-    }
+  @Autowired
+  public void setSqlManager(SqlManager sqlManager) {
+    this.sqlManager = sqlManager;
+  }
 }
