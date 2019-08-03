@@ -10,6 +10,12 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<appbase-parent.version>3.1</appbase-parent.version>
+
+		<!-- maven -->
+		<maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
+		<maven-source-plugin.version>3.0.1</maven-source-plugin.version>
+		<maven-javadoc-plugin.version>2.10.4</maven-javadoc-plugin.version>
+		<jacoco-maven-plugin.version>0.7.9</jacoco-maven-plugin.version>
 	</properties>
 
 	<build>
@@ -17,6 +23,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven-compiler-plugin.version}</version>
         <configuration>
           <source>1.8</source>
           <target>1.8</target>
@@ -25,6 +32,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
+				<version>${maven-source-plugin.version}</version>
         <executions>
           <execution>
             <id>attach-sources</id>
@@ -37,6 +45,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
+				<version>${maven-javadoc-plugin.version}</version>
         <executions>
           <execution>
             <id>attach-javadocs</id>
@@ -77,11 +86,21 @@
           </execution>
         </executions>
         <configuration>
+					<!--
           <systemPropertyVariables>
             <jacoco-agent.destfile>target/jacoco.exec</jacoco-agent.destfile>
           </systemPropertyVariables>
+          -->
         </configuration>
       </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.22.0</version>
+				<configuration>
+					<skipTests>false</skipTests>
+				</configuration>
+			</plugin>
     </plugins>
   </build>
 
@@ -101,16 +120,13 @@
 		<dependency>
 			<groupId>net.doublegsoft.appbase</groupId>
 			<artifactId>appbase-common</artifactId>
+			<version>3.1</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-fileupload</groupId>
 			<artifactId>commons-fileupload</artifactId>
 			<version>1.3.1</version>
 		</dependency>
-		<!--dependency> <groupId>net.doublegsoft.appbase</groupId> <artifactId>appbase-dictionary</artifactId> 
-			</dependency> <dependency> <groupId>net.doublegsoft.appbase</groupId> <artifactId>appbase-metadata</artifactId> 
-			</dependency> <dependency> <groupId>net.doublegsoft.appbase</groupId> <artifactId>appbase-changelog</artifactId> 
-			</dependency -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-beans</artifactId>

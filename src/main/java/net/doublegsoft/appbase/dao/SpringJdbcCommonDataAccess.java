@@ -150,13 +150,33 @@ public class SpringJdbcCommonDataAccess implements CommonDataAccess {
   }
 
   @Override
-  public void prepare(String sql, Blob... blobs) throws DataAccessException {
+  public void prepare(String sql, Object... objs) throws DataAccessException {
 
   }
 
   @Override
-  public void prepare(String sql, InputStream... streams) throws DataAccessException {
+  public List<ObjectMap> prepareQuery(String sql, Object... objs) throws DataAccessException {
+    return null;
+  }
 
+  @Override
+  public <T> Pagination<T> paginate(String sql, Class<T> klass, int start, int limit) throws DataAccessException {
+    return null;
+  }
+
+  @Override
+  public List<ObjectMap> many(String sql) throws DataAccessException {
+    return null;
+  }
+
+  @Override
+  public <T> List<T> many(String sql, Class<T> klass) throws DataAccessException {
+    return null;
+  }
+
+  @Override
+  public <T> T single(String sql, Class<T> klass) throws DataAccessException {
+    return null;
   }
 
   @Override

@@ -23,6 +23,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebArgumentResolver;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -60,7 +62,7 @@ public class ObjectMapArgumentResolver implements HandlerMethodArgumentResolver,
   @Override
   public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
       NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception {
-    ObjectMap retVal = new ObjectMap();
+    ObjectMap retVal;
     HttpServletRequest req = webRequest.getNativeRequest(HttpServletRequest.class);
     if (CONTENT_TYPE_JSON.equals(req.getContentType())) {
       StringBuilder body = new StringBuilder();
@@ -70,10 +72,7 @@ public class ObjectMapArgumentResolver implements HandlerMethodArgumentResolver,
       while ((len = req.getInputStream().read(buff)) != -1) {
         body.append(new String(buff, 0, len, Charset.forName("UTF-8")));
       }
-      Map<String, Object> obj = (Map<String, Object>) JSON.parse(body.toString());
-      if (obj != null) {
-        retVal.putAll(obj);
-      }
+      retVal = map2ObjectMap((Map<String, Object>) JSON.parse(body.toString()));
       if (body.length() == 0) {
         req.getParameterMap().entrySet().forEach(entry -> {
           String[] values = entry.getValue();
@@ -81,6 +80,7 @@ public class ObjectMapArgumentResolver implements HandlerMethodArgumentResolver,
         });
       }
     } else {
+      retVal = new ObjectMap();
       Iterator<String> params = webRequest.getParameterNames();
       while (params.hasNext()) {
         String param = params.next();
@@ -106,6 +106,35 @@ public class ObjectMapArgumentResolver implements HandlerMethodArgumentResolver,
       return UNRESOLVED;
     }
     return resolveArgument(methodParameter, null, webRequest, null);
+  }
+
+  private static ObjectMap map2ObjectMap(Map<String, Object> data) {
+    ObjectMap retVal = new ObjectMap();
+    if (data == null) {
+      return retVal;
+    }
+    for (Map.Entry<String, Object> entry : data.entrySet()) {
+      if (entry.getValue() == null) {
+        retVal.put(entry.getKey(), null);
+        continue;
+      }
+      if (entry.getValue().getClass() == JSONObject.class) {
+        retVal.put(entry.getKey(), map2ObjectMap((Map<String, Object>) entry.getValue()));
+      } else if (entry.getValue().getClass() == JSONArray.class) {
+        JSONArray array = (JSONArray)entry.getValue();
+        for (int i = 0; i < array.size(); i++) {
+          Object obj = array.get(i);
+          if (obj != null && obj.getClass() == JSONObject.class) {
+            retVal.add(entry.getKey(), map2ObjectMap((Map<String, Object>) obj));
+          } else {
+            retVal.add(entry.getKey(), obj);
+          }
+        }
+      } else {
+        retVal.put(entry.getKey(), entry.getValue());
+      }
+    }
+    return retVal;
   }
 
 }

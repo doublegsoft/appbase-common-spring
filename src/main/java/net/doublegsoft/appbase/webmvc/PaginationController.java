@@ -56,6 +56,21 @@ public class PaginationController extends BaseController {
     }
   }
 
+  @PostMapping("/paginate2")
+  @ResponseBody
+  public JsonData paginate2(ObjectMap params) {
+    Integer start = params.get("start");
+    Integer limit = params.get("limit");
+    String sqlId = params.get("sqlId");
+    SqlParams sqlParams = new SqlParams().set(params);
+    try {
+      return new JsonData(commonService.paginate(sqlId, start, limit, sqlParams));
+    } catch (ServiceException ex) {
+      TRACER.error(ex.getMessage(), ex);
+      return new JsonData().error(ex.getMessage());
+    }
+  }
+
   public void setCommonService(CommonService commonService) {
     this.commonService = commonService;
   }
