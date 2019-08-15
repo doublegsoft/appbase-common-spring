@@ -170,11 +170,6 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.hsqldb</groupId>
-			<artifactId>hsqldb</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>com.jolbox</groupId>
 			<artifactId>bonecp</artifactId>
 			<scope>test</scope>
@@ -185,9 +180,19 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.hsqldb</groupId>
+			<artifactId>hsqldb</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpmime</artifactId>
 			<version>4.5.3</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-core</artifactId>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -213,6 +218,13 @@
       <url>http://120.79.137.143:8081/repository/maven-releases/</url>
     </repository>
   </distributionManagement>
+
+	<repositories>
+		<repository>
+			<id>cqwinning-repository</id>
+			<url>http://120.79.137.143:8081/repository/maven-releases/</url>
+		</repository>
+	</repositories>
   
   <!--
 	<distributionManagement>

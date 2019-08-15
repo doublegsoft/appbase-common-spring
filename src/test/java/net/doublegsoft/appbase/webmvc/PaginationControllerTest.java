@@ -46,7 +46,7 @@ public class PaginationControllerTest extends ControllerTestBase {
   @Test
   public void test() throws Exception {
     HttpClient hc = HttpClients.createDefault();
-    HttpPost post = new HttpPost(ROOT_URL + "/api/paginate.do");
+    HttpPost post = new HttpPost(ROOT_URL + "/api/common/paginate.do");
     // HttpPost post = new HttpPost("http://localhost:8080/paginate.do");
     List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
     urlParameters.add(new BasicNameValuePair("sqlId", "page"));
