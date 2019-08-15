@@ -18,6 +18,8 @@ package net.doublegsoft.appbase.webmvc;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -28,6 +30,7 @@ import net.doublegsoft.appbase.ObjectMap;
 import net.doublegsoft.appbase.SqlParams;
 import net.doublegsoft.appbase.service.CommonService;
 import net.doublegsoft.appbase.service.ServiceException;
+import picocli.CommandLine;
 
 /**
  *
@@ -36,12 +39,14 @@ import net.doublegsoft.appbase.service.ServiceException;
  *
  * @since 1.0
  */
-@RequestMapping(value = "/api")
+@RequestMapping(value = "/api/common")
 @RestController
 public class PaginationController extends BaseController {
 
   private static final Logger TRACER = LoggerFactory.getLogger(PaginationController.class);
 
+  @Autowired
+  @Qualifier("commonService")
   private CommonService commonService;
 
   @PostMapping("/paginate")
@@ -56,7 +61,7 @@ public class PaginationController extends BaseController {
     }
   }
 
-  @PostMapping("/paginate2")
+  @PostMapping("/v2/paginate")
   @ResponseBody
   public JsonData paginate2(ObjectMap params) {
     Integer start = params.get("start");
