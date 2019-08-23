@@ -3,11 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="8fa7dab5-8d73-465a-ada8-aeccd989b819" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/appbase-common-spring.iml" beforeDir="false" afterPath="$PROJECT_DIR$/appbase-common-spring.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/net/doublegsoft/appbase/webmvc/PaginationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/net/doublegsoft/appbase/webmvc/PaginationController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/net/doublegsoft/appbase/webmvc/PaginationControllerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/net/doublegsoft/appbase/webmvc/PaginationControllerTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/resources/web/WEB-INF/spring-appbase.xml" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/resources/web/WEB-INF/spring-appbase.xml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -82,6 +77,21 @@
       <workItem from="1563948473589" duration="660000" />
       <workItem from="1564479317871" duration="81000" />
     </task>
+    <task id="LOCAL-00001" summary="autowired the commonService">
+      <created>1565853734460</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1565853734460</updated>
+    </task>
+    <task id="LOCAL-00002" summary="autowired the commonService">
+      <created>1565853761580</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1565853761580</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -102,6 +112,10 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="autowired the commonService" />
+    <option name="LAST_COMMIT_MESSAGE" value="autowired the commonService" />
   </component>
   <component name="masterDetails">
     <states>
